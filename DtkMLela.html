@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>马来西亚历史：地方领袖的抗争</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #873a16;    /* 泥土深橙：配合霹雳历史与抗争主题 */
+            --secondary-color: #d97736;  /* 亮橙色 */
+            --bg-color: #fcf9f7;         /* 舒适清爽的偏暖背景色 */
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        /* 固定视口高度，防止整个网页出现外层滚动条 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部看板 */
+        .top-bar {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), #5e260d);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+
+        .score-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        /* 主容器：撑满剩余高度 */
+        .main-container {
+            flex: 1 1 auto;
+            display: grid;
+            grid-template-columns: 550px 1fr;
+            gap: 30px;
+            height: calc(100% - 90px);
+            min-height: 0;
+        }
+
+        /* 左右面板独立滚动 */
+        .left-panel, .right-panel {
+            height: 100%;
+            overflow-y: auto;
+            padding: 25px;
+            border-radius: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: #bdc3c7 #f4f6f7;
+        }
+
+        /* 左侧专有样式 */
+        .left-panel {
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border-top: 8px solid var(--primary-color);
+        }
+
+        /* 右侧专有样式 */
+        .right-panel {
+            background-color: transparent;
+            box-shadow: none;
+            padding: 0 10px 25px 0;
+        }
+
+        /* 模块大标题 */
+        .panel-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #eaeded;
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 人物头像群容器 */
+        .avatar-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .avatar-container {
+            text-align: center;
+            background: #fdfaf7;
+            padding: 15px;
+            width: 100%;
+            max-width: 320px;
+            border-radius: 8px;
+            border: 1px dashed #d97736;
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: auto;
+            max-height: 240px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .avatar-name {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-top: 10px;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        /* 思维导图树状节点 */
+        .mind-node {
+            margin-bottom: 18px;
+            background: #fdfaf7;
+            padding: 18px;
+            border-left: 6px solid var(--primary-color);
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        /* 放大节点标题 */
+        .node-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #873a16;
+            margin-bottom: 8px;
+        }
+
+        /* 放大笔记正文内容 */
+        .node-desc {
+            font-size: 18px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .node-desc b {
+            color: #111;
+            background-color: #fdebd0;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        /* 习题卡片样式 */
+        .quiz-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #bdc3c7;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card:last-child { margin-bottom: 0; }
+        .quiz-card.answered-correct { border-left-color: #2ecc71; background-color: #f4fbf7; }
+        .quiz-card.answered-wrong { border-left-color: #e74c3c; background-color: #fdf5f4; }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quiz-tag {
+            background-color: #eaeded;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        .tts-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .tts-btn:hover { background-color: #fbeee6; }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        /* 选项布局 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background-color: #fafafa;
+            border: 1px solid #e5e8e8;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        .option-item:hover { background-color: #f2f4f4; }
+        .option-item input { margin: 0; transform: scale(1.2); }
+
+        /* 输入框 */
+        .text-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid #d5dbdb;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        .text-input:focus { border-color: var(--primary-color); }
+
+        /* 交互按钮 */
+        .action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .action-btn:hover { background-color: #692c10; }
+
+        /* 实时反馈效果 */
+        .feedback-msg {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 15px;
+            display: none;
+        }
+        .feedback-msg.show-success { display: block; background-color: #e8f8f0; color: #1e8449; border: 1px solid #2ecc71; }
+        .feedback-msg.show-error { display: block; background-color: #fdedec; color: #943126; border: 1px solid #e74c3c; }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            html, body { overflow: auto; height: auto; }
+            .main-container { grid-template-columns: 1fr; height: auto; }
+            .left-panel, .right-panel { height: auto; overflow-y: visible; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <h1><i class="fa-solid fa-graduation-cap"></i> 历史交互学习课堂：拿督马哈拉惹惹里拉的抗争</h1>
+        <div class="score-badge">
+            <i class="fa-solid fa-star" style="color: #f1c40f;"></i>
+            <span>我的积分: <span id="total-score">0</span> 分</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+
+        <div class="left-panel">
+            <h2 class="panel-title"><i class="fa-solid fa-book-bookmark"></i> 核心精读笔记 (大字清晰版)</h2>
+            
+            <div class="avatar-box">
+                <div class="avatar-container">
+                    <img src="DtkMLela.jpeg" onerror="this.src='DtkMLela.jpg'; this.onerror=function(){this.src='https://placehold.co/400x300?text=Dato+Maharaja+Lela';}" class="avatar-placeholder" alt="拿督马哈拉惹惹里拉">
+                    <div class="avatar-name">拿督马哈拉惹惹里拉 (Dato' Maharaja Lela)<br>—— 霹雳州的抗争英雄 ——</div>
+                </div>
+            </div>
+
+            <div class="mind-node">
+                <div class="node-title"><i class="fa-solid fa-user"></i> 1. 人物背景与身份</div>
+                <p class="node-desc">他的全名是<b>拿督马哈拉惹惹里拉班达朗</b>。他负责管理<b>巴西沙哇 (Pasir Salak)</b>，是<b>霹雳八大酋长</b>之一。</p>
+            </div>
+
+            <div class="mind-node">
+                <div class="node-title"><i class="fa-solid fa-triangle-exclamation"></i> 2. 奋起抗争的原因</div>
+                <p class="node-desc">
+                    • 英国参政司<b>毕治 (J.W.W. Birch)</b> 强行干预霹雳州的行政事务和马来人的风俗习惯。<br>
+                    • 毕治<b>剥夺了苏丹和当地酋长的权力</b>。<br>
+                    • 英国人向人民<b>强征新税</b>，大大加重了人民的负担。<br>
+                    • 毕治在管理时态度非常<b>傲慢自大</b>。
+                </p>
+            </div>
+
+            <div class="mind-node">
+                <div class="node-title"><i class="fa-solid fa-calendar-days"></i> 3. 抗争行动关键节点</div>
+                <p class="node-desc">
+                    • <b>1875年2月</b>：苏丹阿都拉、拿督马哈拉惹惹里拉和霹雳的马来酋长共同集会，抗议英国人的干政行为。<br>
+                    • <b>1875年9月</b>：拿督马哈拉惹惹里拉正式同意执行<b>刺杀毕治</b>的任务。<br>
+                    • <b>1875年11月</b>：在拿督马哈拉惹惹里拉的严厉命令下，<b>瑟普东 (Seputum)</b> 在位于巴西沙哇的<b>双溪霹雳 (Sungai Perak)</b> 成功刺杀了毕治。
+                </p>
+            </div>
+
+            <div class="mind-node">
+                <div class="node-title"><i class="fa-solid fa-gavel"></i> 4. 最终悲壮结局</div>
+                <p class="node-desc">抗争遭到英国军队反扑。<b>1877年</b>，拿督马哈拉惹惹里拉和盟友瑟普东不幸被逮捕，随后双双被判处<b>绞刑</b>。</p>
+            </div>
+        </div>
+
+        <div class="right-panel" id="quiz-box">
+            </div>
+
+    </div>
+
+    <script>
+        // 10道专为拿督马哈拉惹惹里拉定制的全新题库
+        const quizData = [
+            { id: 1, type: 'TF', q: '拿督马哈拉惹惹里拉是负责管理巴西沙哇 (Pasir Salak) 的领袖。', a: '对' },
+            { id: 2, type: 'TF', q: '拿督马哈拉惹惹里拉是砂拉越拉让江流域的统治酋长。', a: '错' },
+            { id: 3, type: 'TF', q: '英国参政司毕治因为态度谦虚、尊重马来风俗而受到了当地人民的爱戴。', a: '错' },
+            { id: 4, type: 'TF', q: '1875年2月，苏丹阿都拉曾与拿督马哈拉惹惹里拉一起抗议英国人干政。', a: '对' },
+            
+            { id: 5, type: 'MC', q: '拿督马哈拉惹惹里拉是属于马来西亚哪一个州属的八大酋长之一？', options: ['A. 砂拉越 (Sarawak)', 'B. 霹雳州 (Perak)', 'C. 雪兰莪 (Selangor)'], a: 'B' },
+            { id: 6, type: 'MC', q: '强征新税、剥夺当地酋长权力并导致冲突爆发的英国参政司名字叫什么？', options: ['A. 詹姆斯布洛克', 'B. 毕治 (J.W.W. Birch)', 'C. 麦克迈克尔'], a: 'B' },
+            { id: 7, type: 'MC', q: '1877年拿督马哈拉惹惹里拉被逮捕后，最终被判处了什么刑罚？', options: ['A. 释放并奖励积分', 'B. 放逐流放到其他州属', 'C. 绞刑'], a: 'C' },
+            
+            { id: 8, type: 'FB', q: '在拿督马哈拉惹惹里拉的命令下，直接在河边动手刺杀毕治的执行者是_______。', hint: '输入三个字的中文名字', a: '瑟普东' },
+            { id: 9, type: 'FB', q: '毕治被刺杀的精确地点，是位于巴西沙哇的_______河（双溪霹雳）。', hint: '输入两个字的中文地名', a: '霹雳' },
+            { id: 10, type: 'FB', q: '拿督马哈拉惹惹里拉的全名是拿督马哈拉惹惹里拉_______。', hint: '输入两个字的中文结尾名，提示：班...？', a: '班达朗' }
+        ];
+
+        let totalScore = 0;
+        const recordStatus = {}; 
+
+        // 动态生成习题卡片
+        function buildQuiz() {
+            const container = document.getElementById('quiz-box');
+            let nodesHtml = '';
+
+            quizData.forEach((item, index) => {
+                let typeLabel = item.type === 'TF' ? '是非题' : (item.type === 'MC' ? '单选题' : '填空题');
+                
+                nodesHtml += `
+                    <div class="quiz-card" id="card-${item.id}">
+                        <div class="quiz-header">
+                            <span class="quiz-tag">${index + 1}. ${typeLabel}</span>
+                            <button class="tts-btn" onclick="playVoice('题 ${index + 1}：${item.q.replace(/'/g, "\\'")}')">
+                                <i class="fa-solid fa-volume-high"></i> 🔊 听题
+                            </button>
+                        </div>
+                        <div class="question-text">${item.q}</div>
+                `;
+
+                if (item.type === 'TF') {
+                    nodesHtml += `
+                        <div class="options-list">
+                            <label class="option-item"><input type="radio" name="ans-${item.id}" value="对"> ○ 对</label>
+                            <label class="option-item"><input type="radio" name="ans-${item.id}" value="错"> × 错</label>
+                        </div>
+                    `;
+                } else if (item.type === 'MC') {
+                    nodesHtml += `<div class="options-list">`;
+                    item.options.forEach(opt => {
+                        nodesHtml += `<label class="option-item"><input type="radio" name="ans-${item.id}" value="${opt[0]}"> ${opt}</label>`;
+                    });
+                    nodesHtml += `</div>`;
+                } else if (item.type === 'FB') {
+                    nodesHtml += `<input type="text" class="text-input" id="input-${item.id}" placeholder="${item.hint}">`;
+                }
+
+                nodesHtml += `
+                        <button class="action-btn" onclick="verifyQuizAnswer(${item.id})">检查答案</button>
+                        <div class="feedback-msg" id="msg-${item.id}"></div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = nodesHtml;
+        }
+
+        // 无障碍网页文本转语音引擎 (Text-to-Speech)
+        function playVoice(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); 
+                const voiceTask = new SpeechSynthesisUtterance(text);
+                voiceTask.lang = 'zh-CN';
+                voiceTask.rate = 1.0; 
+                window.speechSynthesis.speak(voiceTask);
+            } else {
+                alert('您的设备浏览器暂不支持系统语音播放。');
+            }
+        }
+
+        // 智能化答案匹配与积分逻辑（含防刷分机制）
+        window.verifyQuizAnswer = function(id) {
+            const config = quizData.find(x => x.id === id);
+            let userAns = '';
+
+            if (config.type === 'TF' || config.type === 'MC') {
+                const picked = document.querySelector(`input[name="ans-${id}"]:checked`);
+                if (picked) userAns = picked.value;
+            } else if (config.type === 'FB') {
+                userAns = document.getElementById(`input-${id}`).value.trim();
+            }
+
+            if (!userAns) {
+                alert('请小同学先选择或写出你的答案哦！');
+                return;
+            }
+
+            const card = document.getElementById(`card-${id}`);
+            const feedback = document.getElementById(`msg-${id}`);
+            let isTrue = false;
+
+            if (config.type === 'FB') {
+                isTrue = userAns.includes(config.a);
+            } else {
+                isTrue = (userAns === config.a);
+            }
+
+            if (isTrue) {
+                feedback.innerHTML = `<i class="fa-solid fa-face-smile"></i> 答对啦！太棒了！奖励 +10 积分！`;
+                feedback.className = "feedback-msg show-success";
+                card.className = "quiz-card answered-correct";
+
+                if (recordStatus[id] !== 'CORRECT') {
+                    totalScore += 10;
+                    recordStatus[id] = 'CORRECT';
+                    triggerBeep(523.25, 0.15); 
+                }
+            } else {
+                feedback.innerHTML = `<i class="fa-solid fa-face-thinking"></i> 答错啦，别灰心！看一眼左边大字笔记寻找线索，再试试看！`;
+                feedback.className = "feedback-msg show-error";
+                card.className = "quiz-card answered-wrong";
+
+                if (recordStatus[id] !== 'CORRECT') {
+                    if (totalScore >= 3) totalScore -= 3;
+                    triggerBeep(220.00, 0.25); 
+                }
+            }
+
+            document.getElementById('total-score').innerText = totalScore;
+        };
+
+        // 提示音效合成器
+        function triggerBeep(frequency, duration) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const mainOscillator = audioContext.createOscillator();
+                const volumeControl = audioContext.createGain();
+                
+                mainOscillator.connect(volumeControl);
+                volumeControl.connect(audioContext.destination);
+                
+                mainOscillator.frequency.value = frequency;
+                mainOscillator.type = 'sine';
+                
+                mainOscillator.start();
+                volumeControl.gain.setValueAtTime(0.2, audioContext.currentTime);
+                volumeControl.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+                mainOscillator.stop(audioContext.currentTime + duration);
+            } catch (error) {
+                console.log("音频输出受限");
+            }
+        }
+
+        window.onload = buildQuiz;
+    </script>
+</body>
+</html>
